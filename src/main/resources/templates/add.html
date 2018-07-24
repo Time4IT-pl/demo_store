@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Update</title>
+    <title>Add product</title>
 
 
     <link href="webjars/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
@@ -19,37 +19,42 @@
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
 
-            <form action="/update" method="post" id="form" >
-                <input type="hidden" name="serialNo" th:value="${product.serialNo}">
+            <form action="/add" method="post" id="form">
 
                 <div class="form-group">
-                    <input type="text" name="serialNo" th:value="${product.serialNo}" class="form-control" disabled>
-                </div>
-
-                <div class="form-group">
-                    <input type="text" name="name" th:value="${product.name}" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="text"name="description" th:value="${product.description}" rows="3" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="text" th:value="${product.categories}" class="form-control" disabled>
+                    <input type="text" name="serialNo" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <input type="text" th:value="${product.producer}" class="form-control" disabled>
+                    <input type="text" name="name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="text"name="description" rows="3" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <input type="text" name="price" th:value="${product.price}" class="form-control">
+                    <select class="form-control" id="categories" name="category">
+                        <option th:each="c : ${category}" th:text="${c.name}"></option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <input type="number" name="quantity" th:value="${product.quantity}" class="form-control">
+                    <select class="form-control" id="producer" name="producer">
+                        <option th:each="p : ${producer}" th:text="${p.name}"></option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <input type="text" name="price" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <input type="text" name="picture" th:value="${product.picture}" class="form-control">
+                    <input type="number" name="quantity" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="picture" class="form-control">
                 </div>
 
 
@@ -76,7 +81,7 @@
 
             </form>
 
-            <form action="/products" id="products"></form>
+            <form action="/products" method="get" id="products"></form>
 
         </div>
 
