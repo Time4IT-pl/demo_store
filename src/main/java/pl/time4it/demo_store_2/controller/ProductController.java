@@ -77,7 +77,7 @@ public class ProductController {
             @RequestParam(value = "quantity") Integer quantity,
             @RequestParam(value = "promotion") boolean promotion,
             @RequestParam(value = "serialNo") String serialNo,
-            @RequestParam(value = "picture") String picture) {
+            @RequestParam(value = "picture", required = false) String picture) {
 
         Optional<Product> optionalProduct = productRepository.findBySerialNo(serialNo);
         Optional<Category> optionalCategory = categoryRepository.findByTitle(category);
@@ -106,7 +106,56 @@ public class ProductController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+
+    }
+    @RequestMapping(value = "products/update/{serialNo}", method = RequestMethod.PUT)
+    public ResponseEntity<Product> update (
+            @PathVariable String serialNo,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "price") String price,
+            @RequestParam(value = "quantity", required = false) Integer quantity,
+            @RequestParam(value = "promotion", required = false) boolean promotion,
+            @RequestParam(value = "picture", required = false) String picture
+    ) {
+        Optional<Product> optionalProduct = productRepository.findBySerialNo(serialNo);
+
+        if(!optionalProduct.isPresent()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            Product product = optionalProduct.get();
+
+            product.setId(optionalProduct.get().getId());
+            product.setName(name);
+            product.setDescription(description);
+
+            product.setPrice(new BigDecimal(price));
+            product.setQuantity(quantity);
+            product.setPromotion(promotion);
+            product.setSerialNo(serialNo);
+            product.setPicture(picture);
+
+
+            productRepository.save(product);
+
+            return ResponseEntity.ok().build();
+        }
+
     }
 
 
+    @GetMapping("products/{serialNo}")
+    public ProductDto getProduct(@PathVariable String serialNo) {
+       Optional<Product> optionalProduct =  productRepository.findBySerialNo(serialNo);
+
+       if(optionalProduct.isPresent()) {
+         //  Optional<Product> result = productRepository.findById(optionalProduct.get().getId())
+
+           ProductMapper mapper = new ProductMapper();
+           return mapper.map(optionalProduct.get());
+       }
+
+       return new ProductDto();
+
+    }
 }

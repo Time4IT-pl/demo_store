@@ -101,8 +101,17 @@
 
 
                     <td>
-                        <form action="/#" method="post" th:id="${o.serialNo} + upd">
+                        <form action="/update-form" th:id="${o.serialNo} + upd">
                             <input type="hidden" th:value="${o.serialNo}">
+
+                            <input type="hidden" name="serialNo" th:value="${o.serialNo}">
+                            <input type="hidden" name="description" th:value="${o.description}">
+                            <input type="hidden" name="name" th:value="${o.name}">
+                            <input type="hidden" name="price" th:value="${o.price}">
+                            <input type="hidden" name="quantity" th:value="${o.quantity}">
+                            <input type="hidden" name="promotion" th:value="${o.promotion}">
+                            <input type="hidden" name="picture" th:value="${o.picture}">
+
                             <button class="btn btn-success b" type="submit" th:form="${o.serialNo} + upd">update</button>
                         </form>
                     </td>
