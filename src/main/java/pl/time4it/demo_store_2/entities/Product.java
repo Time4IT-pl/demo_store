@@ -47,7 +47,7 @@ public class Product {
     @Column(name = "promotion")
     private boolean promotion;
 
-    @Column(name = "serialNo")
+    @Column(name = "serial_no")
     private  String serialNo;
 
     @Column(name = "picture")

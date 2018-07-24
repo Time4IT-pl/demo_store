@@ -11,7 +11,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
         JpaSpecificationExecutor {
 
 
-    String FIND_BY_SERIAL_NO = "select * from product where serialNo = ?1";
+    String FIND_BY_SERIAL_NO = "select * from product where serial_no = ?1";
 
     @Query(value = FIND_BY_SERIAL_NO, nativeQuery = true)
     Optional<Product> findBySerialNo(String serialNo);
