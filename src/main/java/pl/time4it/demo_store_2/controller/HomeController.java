@@ -49,14 +49,14 @@ public class HomeController {
             @RequestParam(value = "serialNo") String serialNo,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "price") String price,
+            @RequestParam(value = "price", required = false) String price,
             @RequestParam(value = "quantity", required = false) Integer quantity,
             @RequestParam(value = "promotion", required = false) boolean promotion,
             @RequestParam(value = "picture", required = false) String picture
-//            ,@RequestParam(value = "category", required = false) String category,
-//            @RequestParam(value = "producer", required = false) String producer
+
     ) {
 
+        System.out.println(serialNo);
         productController.update(serialNo, name, description, price, quantity, promotion, picture);
 
         return getProducts(model);
