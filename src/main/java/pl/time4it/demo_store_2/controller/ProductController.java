@@ -1,0 +1,112 @@
+package pl.time4it.demo_store_2.controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pl.time4it.demo_store_2.dtos.ProductDto;
+import pl.time4it.demo_store_2.entities.Category;
+import pl.time4it.demo_store_2.entities.Producer;
+import pl.time4it.demo_store_2.entities.Product;
+import pl.time4it.demo_store_2.mapper.ProductMapper;
+import pl.time4it.demo_store_2.repositories.CategoryRepository;
+import pl.time4it.demo_store_2.repositories.ProducerRepository;
+import pl.time4it.demo_store_2.repositories.ProductRepository;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@CrossOrigin
+@RequestMapping("/api/v1/")
+public class ProductController {
+
+    @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
+    ProducerRepository producerRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
+
+
+    @GetMapping("products")
+    public List<ProductDto> getProducts() {
+        List<Product> products = productRepository.findAll();
+        ProductMapper mapper = new ProductMapper();
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product p : products) {
+            ProductDto productDto = mapper.map(p);
+            productDtos.add(productDto);
+        }
+        return productDtos;
+    }
+
+    @RequestMapping(value = "products/{serialNo}", method = RequestMethod.DELETE)
+    public ResponseEntity<Product> delete(@PathVariable String serialNo) {
+        Optional<Product> optionalProduct = productRepository.findBySerialNo(serialNo);
+        if (optionalProduct.isPresent()) {
+            productRepository.deleteById(optionalProduct.get().getId());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+//    private String name;
+//    private String description;
+//    private String categories;
+//    private BigDecimal price;
+//    private String producer;
+//    private Integer quantity;
+//    private boolean promotion;
+//    private  String serialNo;
+//    private String picture;
+
+    @RequestMapping(value = "products/add", method = RequestMethod.POST)
+    public ResponseEntity<Product> add(
+
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "description") String description,
+            @RequestParam(value = "category") String category,
+            @RequestParam(value = "price") String price,
+            @RequestParam(value = "producer") String producer,
+            @RequestParam(value = "quantity") Integer quantity,
+            @RequestParam(value = "promotion") boolean promotion,
+            @RequestParam(value = "serialNo") String serialNo,
+            @RequestParam(value = "picture") String picture) {
+
+        Optional<Product> optionalProduct = productRepository.findBySerialNo(serialNo);
+        Optional<Category> optionalCategory = categoryRepository.findByTitle(category);
+        Optional<Producer> optionalProducer = producerRepository.findByTitle(producer);
+
+        if (!optionalProduct.isPresent()
+                && optionalCategory.isPresent()
+                && optionalProducer.isPresent()) {
+
+            Product product = new Product();
+
+            product.setName(name);
+            product.setDescription(description);
+            product.setCategory(optionalCategory.get());
+            product.setPrice(new BigDecimal(price));
+            product.setProducer(optionalProducer.get());
+            product.setQuantity(quantity);
+            product.setPromotion(promotion);
+            product.setSerialNo(serialNo);
+            product.setPicture(picture);
+
+            productRepository.save(product);
+
+            return ResponseEntity.ok().build();
+
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+}
