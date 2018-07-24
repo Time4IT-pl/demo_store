@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.time4it.demo_store_2.dtos.ProductDto;
 import pl.time4it.demo_store_2.entities.Product;
 
 import java.math.BigDecimal;
@@ -58,14 +59,18 @@ public class HomeController {
 
         productController.update(serialNo, name, description, price, quantity, promotion, picture);
 
-            return getProducts(model);
-        }
+        return getProducts(model);
+    }
 
     @RequestMapping(value = "update-form", method = RequestMethod.GET)
-        public String updatePage(Model model, String serialNo) {
-        model.addAttribute("product", productController.getProduct(serialNo));
+    public String updatePage(
+            Model model,
+            @RequestParam(value = "serialNo") String serialNo) {
+
+        ProductDto product = productController.getProduct(serialNo);
+        model.addAttribute("product", product);
         return "update";
-        }
-
-
     }
+
+
+}
